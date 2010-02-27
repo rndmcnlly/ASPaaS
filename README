@@ -1,0 +1,48 @@
+aspaas: answer-set programing as a service
+
+REQUIREMENTS:
+
+twisted for python
+lparse / smodels from http://www.tcs.hut.fi/Software/smodels/
+
+RUNNING:
+
+$ twistd -oy aspaas.tac
+
+USAGE:
+
+GET / -- a nice user-facing front-end
+
+POST /solve -- the workhorse
+ Request parameters:
+  - code: lparse programs
+  - args: lparse binary arguments
+  - json: true? display results as a json stream (instead of console text)
+  - jsonp: f? a function to call per the json-padding convention
+
+EXAMPLE:
+
+Input:
+  code (here are my ice cream preferences)
+    | {chocolate}.
+    | vanilla :- chocolate.
+  args (show me all answer sets)
+    | -n 0
+
+Output:
+    | smodels version 2.33. Reading...done
+    | Answer: 1
+    | Stable Model: chocolate 
+    | Answer: 2
+    | Stable Model: vanilla 
+    | False
+    | Duration: 0.000
+    | Number of choice points: 1
+    | Number of wrong choices: 1
+    | Number of atoms: 3
+    | Number of rules: 2
+    | Number of picked atoms: 3
+    | Number of forced atoms: 0
+    | Number of truth assignments: 7
+    | Size of searchspace (removed): 1 (0)
+
