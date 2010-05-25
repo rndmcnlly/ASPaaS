@@ -4,7 +4,7 @@ from twisted.application import service, internet
 from twisted.internet import reactor, protocol, defer
 from twisted.web import server, resource, static
 from twisted.python import log
-import simplejson
+import json
 import os, signal
 
 class RequestedProcessProtocol(protocol.ProcessProtocol):
@@ -61,9 +61,9 @@ class RequestedProcessProtocol(protocol.ProcessProtocol):
         elif fact:
           model[fact] = True
       if self.padding:
-        self.request.write("%s(%s);\r" % (self.padding, simplejson.dumps(model)))
+        self.request.write("%s(%s);\r" % (self.padding, json.dumps(model)))
       else:
-        self.request.write("%s\r" % simplejson.dumps(model))
+        self.request.write("%s\r" % json.dumps(model))
 
 def launchProcessForRequest(executable, args, input, request):
   arg_list = filter(bool, [executable] + args.split(' '))
@@ -71,7 +71,8 @@ def launchProcessForRequest(executable, args, input, request):
   reactor.spawnProcess(
                   proto,
                   executable,
-                  arg_list)
+                  arg_list,
+                  os.environ)
   return proto
 
 class SolveResource(resource.Resource):
